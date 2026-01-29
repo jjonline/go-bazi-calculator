@@ -1,5 +1,3 @@
-module github.com/warrially/BaziGo
+module github.com/jjonline/go-bazi-calculator
 
 go 1.16
-
-require github.com/yangtizi/htmlgo v1.0.0
