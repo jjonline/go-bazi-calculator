@@ -7,23 +7,23 @@ import (
 	"time"
 )
 
-// 常量定义
+// 常量定義
 const deg = 180.0 / math.Pi
 const rad = math.Pi / 180.0
 
-// ApparentSolarTime 真太阳时
-// 返回给定经度lon的真太阳时
+// ApparentSolarTime 真太陽時
+// 返回給定經度lon的真太陽時
 func ApparentSolarTime(date time.Time, lon float64) time.Time {
-	//真太阳时=太阳时角+12小时
+	//真太陽時=太陽時角+12小時
 	trueTime := (hourAngle(date, lon, 0) + 180) / 15
 	if trueTime > 24 {
 		trueTime -= 24
 	}
-	//真太阳时的分
+	//真太陽時的分
 	minute := (trueTime - math.Floor(trueTime)) * 60
-	//真太阳时的秒
+	//真太陽時的秒
 	second := (minute - math.Floor(minute)) * 60
-	//当地经度下的本地时区
+	//當地經度下的本地時區
 	trueSunTime := date.In(time.FixedZone("LTZ", int(lon*3600.00/15.0)))
 	if trueSunTime.Hour()-int(trueTime) > 12 {
 		trueSunTime = trueSunTime.Add(time.Hour * 24)
@@ -35,7 +35,7 @@ func ApparentSolarTime(date time.Time, lon float64) time.Time {
 		time.FixedZone("LTZ", int(lon*3600.00/15.0)))
 }
 
-// hourAngle 太阳时角（不可导出）
+// hourAngle 太陽時角（不可導出）
 func hourAngle(date time.Time, lon, lat float64) float64 {
 	jde := date2JDE(date)
 	_, loc := date.Zone()
@@ -43,7 +43,7 @@ func hourAngle(date time.Time, lon, lat float64) float64 {
 	return sunTimeAngle(jde, lon, lat, timezone)
 }
 
-// sunTimeAngle 太阳时角计算（不可导出）
+// sunTimeAngle 太陽時角計算（不可導出）
 func sunTimeAngle(JD, Lon, Lat, TZ float64) float64 {
 	startime := limit360(apparentSiderealTime(JD-TZ/24)*15 + Lon)
 	timeangle := startime - hSunApparentRa(td2UT(JD-TZ/24, true))
@@ -53,13 +53,13 @@ func sunTimeAngle(JD, Lon, Lat, TZ float64) float64 {
 	return timeangle
 }
 
-// date2JDE 日期转儒略日（不可导出）
+// date2JDE 日期轉儒略日（不可導出）
 func date2JDE(date time.Time) float64 {
 	day := float64(date.Day()) + float64(date.Hour())/24.0 + float64(date.Minute())/24.0/60.0 + float64(date.Second())/24.0/3600.0 + float64(date.Nanosecond())/1000000000.0/3600.0/24.0
 	return jdeCalc(date.Year(), int(date.Month()), day)
 }
 
-// jdeCalc 儒略日计算（不可导出）
+// jdeCalc 儒略日計算（不可導出）
 func jdeCalc(Year, Month int, Day float64) float64 {
 	if Month == 1 || Month == 2 {
 		Year--
@@ -76,7 +76,7 @@ func jdeCalc(Year, Month int, Day float64) float64 {
 	return (math.Floor(365.25*(float64(Year)+4716.0)) + math.Floor(30.6001*float64(Month+1)) + Day + float64(tmpvarB) - 1524.5)
 }
 
-// td2UT 世界时转力学时或力学时转世界时（不可导出）
+// td2UT 世界時轉力學時或力學時轉世界時（不可導出）
 func td2UT(JDE float64, UT2TD bool) float64 {
 	Deltat := deltaT(JDE, true)
 	if UT2TD {
@@ -86,12 +86,12 @@ func td2UT(JDE float64, UT2TD bool) float64 {
 	}
 }
 
-// deltaT Delta T计算（不可导出）
+// deltaT Delta T計算（不可導出）
 func deltaT(date float64, isJDE bool) float64 {
 	return defaultDeltaTv2(date, isJDE)
 }
 
-// defaultDeltaTv2 默认Delta T v2（不可导出）
+// defaultDeltaTv2 默認Delta T v2（不可導出）
 func defaultDeltaTv2(date float64, isJd bool) float64 {
 	if !isJd {
 		date = jdeCalc(int(date), int((date-math.Floor(date))*12)+1, (date-math.Floor(date))*365.25+1)
@@ -99,7 +99,7 @@ func defaultDeltaTv2(date float64, isJd bool) float64 {
 	return deltaTv2(date)
 }
 
-// deltaTv2 Delta T v2（不可导出）
+// deltaTv2 Delta T v2（不可導出）
 func deltaTv2(jd float64) float64 {
 	if jd > 2461041.5 || jd < 2441317.5 {
 		var y float64
@@ -111,7 +111,7 @@ func deltaTv2(jd float64) float64 {
 		return deltaTSplineY(y)
 	}
 
-	// 闰秒JD值
+	// 閏秒JD值
 	jdLeaps := []float64{2457754.5, 2457204.5, 2456109.5, 2454832.5,
 		2453736.5, 2451179.5, 2450630.5, 2450083.5,
 		2449534.5, 2449169.5, 2448804.5, 2448257.5,
@@ -130,7 +130,7 @@ func deltaTv2(jd float64) float64 {
 	return DT
 }
 
-// deltaTSplineY Delta T样条Y（不可导出）
+// deltaTSplineY Delta T樣條Y（不可導出）
 func deltaTSplineY(y float64) float64 {
 	integratedLod := func(x float64) float64 {
 		u := x - 1825
@@ -165,18 +165,18 @@ func deltaTSplineY(y float64) float64 {
 	return dT
 }
 
-// apparentSiderealTime 视恒星时（不可导出）
+// apparentSiderealTime 視恒星時（不可導出）
 func apparentSiderealTime(JD float64) float64 {
 	return apparentSiderealTime2006(JD)
 }
 
-// apparentSiderealTime2006 视恒星时2006（不可导出）
+// apparentSiderealTime2006 視恒星時2006（不可導出）
 func apparentSiderealTime2006(JD float64) float64 {
 	tmp := meanSiderealTime2006(JD)
 	return tmp + nutation2000Bi(JD)*cos(sita(JD))/15
 }
 
-// meanSiderealTime2006 平恒星时2006（不可导出）
+// meanSiderealTime2006 平恒星時2006（不可導出）
 func meanSiderealTime2006(jd_ut1 float64) float64 {
 	jd_tt := td2UT(jd_ut1, true)
 	t := (jd_tt - 2451545.0) / 36525.0
@@ -192,7 +192,7 @@ func meanSiderealTime2006(jd_ut1 float64) float64 {
 	return gmst * deg / 15
 }
 
-// earthRotationAngle 地球自转角（不可导出）
+// earthRotationAngle 地球自轉角（不可導出）
 func earthRotationAngle(jd_ut1 float64) float64 {
 	t := jd_ut1 - 2451545.0
 	frac := math.Mod(jd_ut1, 1.0)
@@ -205,37 +205,37 @@ func earthRotationAngle(jd_ut1 float64) float64 {
 	return era
 }
 
-// hSunApparentRa 太阳视赤经（不可导出）
+// hSunApparentRa 太陽視赤經（不可導出）
 func hSunApparentRa(JD float64) float64 {
 	return loToRa(JD, hSunApparentLo(JD), hSunTrueBo(JD))
 }
 
-// hSunApparentLo 太阳视黄经（不可导出）
+// hSunApparentLo 太陽視黃經（不可導出）
 func hSunApparentLo(JD float64) float64 {
 	L := hSunTrueLo(JD)
 	L = L + nutation2000Bi(JD) + sunLoGXC(JD)
 	return L
 }
 
-// hSunTrueLo 太阳真黄经（不可导出）
+// hSunTrueLo 太陽真黃經（不可導出）
 func hSunTrueLo(JD float64) float64 {
 	L := wherePlanet(0, 0, JD)
 	return L
 }
 
-// hSunTrueBo 太阳真黄纬（不可导出）
+// hSunTrueBo 太陽真黃緯（不可導出）
 func hSunTrueBo(JD float64) float64 {
 	L := wherePlanet(0, 1, JD)
 	return L
 }
 
-// sunLoGXC 太阳光行差修正（不可导出）
+// sunLoGXC 太陽光行差修正（不可導出）
 func sunLoGXC(JD float64) float64 {
 	R := wherePlanet(0, 2, JD)
 	return -20.49552 / R / 3600
 }
 
-// loToRa 黄道转赤道（不可导出）
+// loToRa 黃道轉赤道（不可導出）
 func loToRa(jde, lo, bo float64) float64 {
 	ra := math.Atan2(sin(lo)*cos(sita(jde))-tan(bo)*sin(sita(jde)), cos(lo))
 	ra = ra * 180 / math.Pi
@@ -245,12 +245,12 @@ func loToRa(jde, lo, bo float64) float64 {
 	return ra
 }
 
-// sita 黄赤交角（不可导出）
+// sita 黃赤交角（不可導出）
 func sita(JD float64) float64 {
 	return eclipticObliquity(JD, true)
 }
 
-// eclipticObliquity 黄赤交角（不可导出）
+// eclipticObliquity 黃赤交角（不可導出）
 func eclipticObliquity(jde float64, nutation bool) float64 {
 	eps := obliquity1980(jde)
 	if nutation {
@@ -259,7 +259,7 @@ func eclipticObliquity(jde float64, nutation bool) float64 {
 	return eps
 }
 
-// obliquity1980 黄赤交角1980（不可导出）
+// obliquity1980 黃赤交角1980（不可導出）
 func obliquity1980(jd float64) float64 {
 	T := (jd - 2451545.0) / 36525.0
 	as2r := ((1.0 / 3600.0) * math.Pi) / 180.0
@@ -268,19 +268,19 @@ func obliquity1980(jd float64) float64 {
 	return math.Mod(eps*as2r, 2*math.Pi) * deg
 }
 
-// nutation2000Bs 交角章动2000B（不可导出）
+// nutation2000Bs 交角章動2000B（不可導出）
 func nutation2000Bs(jd float64) float64 {
 	_, res := nutation2000B(jd)
 	return res
 }
 
-// nutation2000Bi 黄经章动2000B（不可导出）
+// nutation2000Bi 黃經章動2000B（不可導出）
 func nutation2000Bi(jd float64) float64 {
 	res, _ := nutation2000B(jd)
 	return res
 }
 
-// nutation2000B 章动2000B（不可导出）
+// nutation2000B 章動2000B（不可導出）
 func nutation2000B(jd float64) (float64, float64) {
 	as2r := 4.848136811095359935899141e-6
 	twopi := 6.283185307179586476925287
@@ -767,7 +767,7 @@ func nutation2000B(jd float64) (float64, float64) {
 	return dp * deg, de * deg
 }
 
-// 工具函数（不可导出）
+// 工具函數（不可導出）
 func limit360(x float64) float64 {
 	x = math.Mod(x, 360)
 	if x < 0 {
@@ -792,7 +792,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 	var XL0 [][]float64
 	XL0 = [][]float64{
 
-		//Dear精度:J2000+-4千年 黄经0.1角秒 黄纬0.1角秒 距离0.1AU/10^6
+		//Dear精度:J2000+-4千年 黃經0.1角秒 黃緯0.1角秒 距離0.1AU/10^6
 		[]float64{
 			10000000000,                                                                                                  //A的倍率
 			20, 578, 920, 1100, 1124, 1136, 1148, 1217, 1226, 1229, 1229, 1229, 1229, 1937, 2363, 2618, 2633, 2660, 2666, //位置索引表
@@ -812,7 +812,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R4*/ 386, 2.564, 6283.076, 31, 2.27, 12566.15, 5, 3.44, 5573.14, 2, 2.05, 18849.23, 1, 2.06, 77713.77, 1, 4.41, 161000.69, 1, 3.82, 149854.40, 1, 4.08, 6127.66, 1, 5.26, 6438.50,
 			/*R5*/ 9, 1.22, 6283.08, 1, 0.66, 12566.15},
 
-		//Dmer精度:J2000+-4千年 黄经0.2角秒 黄纬0.2角秒 距离0.2AU/10^6
+		//Dmer精度:J2000+-4千年 黃經0.2角秒 黃緯0.2角秒 距離0.2AU/10^6
 		[]float64{
 			1000000000,                                                                                               //A的倍率
 			20, 443, 710, 761, 791, 818, 824, 1043, 1106, 1142, 1169, 1190, 1196, 1550, 1742, 1781, 1808, 1823, 1823, //位置索引表
@@ -834,7 +834,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R3*/ 327, 1.680, 26087.903, 242, 4.634, 52175.806, 121, 1.390, 78263.709, 51, 4.44, 104351.61, 20, 1.21, 130439.52, 15, 3.14, 0.00, 7, 4.26, 156527.42, 3, 1.03, 182615.32, 1, 4.08, 208703.23,
 			/*R4*/ 4, 0.37, 26087.90, 4, 3.19, 52175.81, 3, 6.17, 78263.71, 1, 2.92, 104351.61, 1, 5.96, 130439.52},
 
-		//Dven精度:J2000+-4千年 黄经0.2角秒 黄纬0.2角秒 距离0.2AU/10^6
+		//Dven精度:J2000+-4千年 黃經0.2角秒 黃緯0.2角秒 距離0.2AU/10^6
 		[]float64{
 			1000000000,                                                                                        //A的倍率
 			20, 257, 374, 425, 437, 449, 458, 566, 629, 641, 653, 665, 668, 929, 1040, 1082, 1091, 1094, 1094, //位置索引表
@@ -856,7 +856,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R3*/ 496, 3.223, 10213.286, 8, 3.21, 20426.57, 1, 3.14, 0.00,
 			/*R4*/ 6, 0.92, 10213.29},
 
-		//Dmar精度:J2000+-4千年 黄经0.5角秒 黄纬0.5角秒 距离1AU/10^6
+		//Dmar精度:J2000+-4千年 黃經0.5角秒 黃緯0.5角秒 距離1AU/10^6
 		[]float64{
 			1000000000,                                                                                                    //A的倍率
 			20, 596, 1028, 1289, 1385, 1427, 1454, 1586, 1670, 1694, 1709, 1718, 1724, 2360, 2873, 3155, 3239, 3275, 3287, //位置索引表
@@ -879,7 +879,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R4*/ 196, 3.582, 3340.612, 163, 4.051, 6681.225, 58, 4.46, 10021.84, 15, 4.84, 13362.45, 4, 1.51, 3185.19, 3, 5.21, 16703.06, 2, 5.16, 3344.14, 1, 0.00, 0.00, 1, 2.19, 3496.03, 1, 0.10, 3583.34, 1, 5.55, 20043.67, 1, 1.87, 6525.80,
 			/*R5*/ 5, 2.48, 6681.22, 3, 2.92, 10021.84, 1, 1.77, 3340.61, 1, 3.31, 13362.45},
 
-		//Djup精度:J2000+-4千年 黄经0.5角秒 黄纬0.5角秒 距离3AU/10^6
+		//Djup精度:J2000+-4千年 黃經0.5角秒 黃緯0.5角秒 距離3AU/10^6
 		[]float64{
 			100000000,                                                                                                    //A的倍率
 			20, 503, 863, 1256, 1451, 1529, 1550, 1676, 1802, 1910, 1964, 1988, 1991, 2513, 2945, 3482, 3761, 3896, 3923, //位置索引表
@@ -902,7 +902,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R4*/ 129, 0.084, 536.805, 113, 4.249, 529.691, 83, 3.30, 522.58, 38, 2.73, 515.46, 27, 5.69, 7.11, 18, 5.40, 1059.38, 13, 6.02, 543.92, 9, 0.77, 1066.50, 8, 5.68, 14.23, 7, 1.43, 412.37, 6, 5.12, 639.90, 5, 3.34, 625.67, 3, 3.40, 1052.27, 3, 4.16, 728.76, 3, 2.90, 426.60, 2, 6.22, 1589.07, 2, 3.12, 1045.15, 2, 1.89, 419.48, 2, 2.60, 199.07, 2, 0.00, 0.00, 2, 2.81, 206.19, 2, 1.33, 1596.19, 1, 5.16, 831.86, 1, 4.42, 956.29, 1, 5.47, 220.41, 1, 0.67, 1361.55, 1, 1.87, 1148.25, 1, 3.17, 508.35, 1, 5.79, 1169.59, 1, 1.48, 1272.68, 1, 2.42, 117.32, 1, 2.20, 942.06, 1, 5.31, 551.03, 1, 0.50, 1073.61, 1, 2.85, 191.96, 1, 3.72, 88.87, 1, 3.53, 302.16, 1, 1.84, 10.29, 1, 1.59, 3.18, 1, 3.82, 618.56, 1, 0.86, 330.62, 1, 5.26, 21.34, 1, 1.83, 647.01, 1, 0.24, 433.71, 1, 4.44, 110.21,
 			/*R5*/ 11, 4.75, 536.80, 4, 5.92, 522.58, 2, 5.57, 515.46, 2, 4.30, 543.92, 2, 3.69, 7.11, 2, 4.13, 1059.38, 2, 5.49, 1066.50, 1, 3.78, 14.23, 1, 4.51, 529.69},
 
-		//Dsat精度:J2000+-4千年 黄经0.5角秒 黄纬0.5角秒 距离5AU/10^6
+		//Dsat精度:J2000+-4千年 黃經0.5角秒 黃緯0.5角秒 距離5AU/10^6
 		[]float64{
 			100000000,                                                                                                     //A的倍率
 			20, 806, 1406, 1946, 2177, 2282, 2333, 2537, 2726, 2867, 2963, 3008, 3026, 4091, 5063, 5789, 6260, 6452, 6536, //位置索引表
@@ -925,7 +925,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R4*/ 1202, 1.4150, 220.4126, 708, 1.162, 213.299, 516, 6.240, 206.186, 427, 2.469, 7.114, 268, 0.187, 426.598, 170, 5.959, 199.072, 150, 0.480, 433.712, 145, 1.442, 227.526, 121, 2.405, 14.227, 47, 5.57, 639.90, 19, 5.86, 647.01, 17, 0.53, 440.83, 16, 2.90, 110.21, 15, 0.30, 419.48, 14, 1.30, 412.37, 13, 2.09, 323.51, 11, 0.22, 95.98, 11, 2.46, 117.32, 10, 3.14, 0.00, 9, 1.56, 88.87, 9, 2.28, 21.34, 9, 0.68, 216.48, 8, 1.27, 234.64, 8, 4.49, 853.20, 8, 3.59, 302.16, 6, 5.17, 103.09, 5, 2.59, 515.46, 4, 4.97, 860.31, 4, 0.02, 191.96, 4, 5.97, 654.12, 4, 1.60, 330.62, 4, 1.60, 405.26, 4, 3.30, 210.12, 3, 2.73, 522.58, 3, 0.75, 209.37, 3, 1.32, 728.76, 2, 1.19, 124.43, 2, 0.49, 447.94, 2, 3.28, 203.00, 2, 0.73, 625.67, 2, 6.15, 429.78, 2, 0.75, 295.05, 2, 3.89, 1066.50, 2, 2.00, 831.86, 2, 0.09, 942.06, 2, 0.82, 223.59, 2, 1.40, 224.34, 2, 3.02, 184.84, 2, 5.41, 824.74, 2, 5.96, 422.67, 1, 2.12, 529.69, 1, 0.72, 536.80, 1, 1.65, 17.41, 1, 1.90, 956.29, 1, 5.97, 195.14, 1, 1.12, 838.97, 1, 0.89, 721.65, 1, 1.59, 735.88, 1, 3.06, 1574.85, 1, 1.01, 1045.15, 1, 5.36, 316.39, 1, 4.93, 56.62, 1, 2.72, 508.35, 1, 1.11, 1169.59,
 			/*R5*/ 129, 5.913, 220.413, 32, 0.69, 7.11, 27, 5.91, 227.53, 20, 4.95, 433.71, 20, 0.67, 14.23, 14, 2.67, 206.19, 14, 1.46, 199.07, 13, 4.59, 426.60, 7, 4.63, 213.30, 5, 3.61, 639.90, 4, 4.90, 440.83, 3, 4.07, 647.01, 3, 4.66, 191.96, 3, 0.49, 323.51, 3, 3.18, 419.48, 2, 3.70, 88.87, 2, 3.32, 95.98, 2, 0.56, 117.32, 2, 5.33, 302.16, 2, 0.00, 0.00, 2, 2.67, 853.20, 2, 0.86, 515.46, 1, 5.83, 234.64, 1, 0.16, 412.37, 1, 5.98, 3.18, 1, 5.23, 216.48, 1, 5.05, 124.43, 1, 0.37, 28.45},
 
-		//Dura精度:J2000+-4千年 黄经1角秒 黄纬1角秒 距离20AU/10^6
+		//Dura精度:J2000+-4千年 黃經1角秒 黃緯1角秒 距離20AU/10^6
 		[]float64{
 			100000000,                                                                                                   //A的倍率
 			20, 539, 836, 980, 1070, 1085, 1088, 1193, 1271, 1307, 1322, 1325, 1325, 2150, 2660, 2936, 3089, 3122, 3122, //位置索引表
@@ -946,7 +946,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			/*R3*/ 1164, 4.7345, 74.7816, 212, 3.343, 63.736, 196, 2.980, 70.849, 105, 0.958, 11.046, 73, 1.00, 149.56, 72, 0.03, 56.62, 55, 2.59, 3.93, 36, 5.65, 77.96, 34, 3.82, 76.27, 32, 3.60, 131.40, 30, 3.44, 85.83, 28, 0.43, 3.18, 27, 2.55, 52.69, 25, 5.14, 78.71, 19, 5.13, 18.16, 18, 0.00, 0.00, 16, 5.20, 71.60, 16, 0.37, 447.80, 15, 2.97, 145.63, 15, 5.57, 462.02, 15, 3.86, 73.30, 11, 6.03, 138.52, 11, 3.58, 224.34, 8, 2.62, 22.09, 8, 0.30, 127.47, 8, 1.45, 1.48, 7, 5.44, 269.92, 7, 0.01, 151.05, 6, 4.37, 284.15, 6, 4.23, 373.01, 5, 4.16, 195.14, 5, 0.78, 62.25, 5, 1.84, 202.25, 5, 2.78, 120.36, 4, 3.96, 9.56, 4, 1.84, 72.33, 4, 1.86, 152.74, 4, 1.89, 209.37, 4, 1.05, 92.94, 4, 2.00, 65.22, 4, 1.17, 153.50, 4, 3.93, 124.29, 3, 1.54, 148.08, 3, 1.41, 351.82, 3, 2.99, 387.24, 3, 5.84, 160.61, 3, 6.04, 12.53, 3, 0.79, 572.23, 3, 5.65, 134.59, 3, 2.77, 213.30, 3, 1.99, 450.98,
 			/*R4*/ 53, 3.01, 74.78, 10, 1.91, 56.62, 7, 5.09, 11.05, 7, 5.43, 149.56, 4, 5.23, 131.40, 3, 1.30, 85.83, 3, 3.14, 0.00, 3, 0.44, 63.74, 2, 6.21, 358.93, 2, 0.92, 145.63, 2, 2.23, 440.68},
 
-		//Dnep精度:J2000+-4千年 黄经1角秒 黄纬1角秒 距离40AU/10^6
+		//Dnep精度:J2000+-4千年 黃經1角秒 黃緯1角秒 距離40AU/10^6
 		[]float64{
 			100000000,                                                                                    //A的倍率
 			20, 188, 260, 281, 293, 299, 302, 359, 404, 419, 422, 425, 425, 638, 701, 743, 746, 746, 746, //位置索引表
@@ -977,12 +977,12 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 
 	n := -1
 	t := (jd - 2451545) / 36525.0000
-	t /= 10 //转为儒略千年数
+	t /= 10 //轉爲儒略千年數
 
 	tn := float64(1)
 	F := XL0[xt]
 	pn := zn*6 + 1
-	N0 := F[pn+1] - F[pn] //N0序列总数
+	N0 := F[pn+1] - F[pn] //N0序列總數
 	var N, v float64
 	for i := 0; i < 6; i++ {
 		n1 := F[pn+i]
@@ -992,7 +992,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			continue
 		}
 		if n < 0 {
-			N = n2 //确定项数
+			N = n2 //確定項數
 		} else {
 			N = math.Floor(3*float64(n)*n0/N0+0.5) + n1
 		}
@@ -1014,7 +1014,7 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 
 	if xt == 0 { //地球
 		t2 := t * t
-		t3 := t2 * t //千年数的各次方
+		t3 := t2 * t //千年數的各次方
 		if zn == 0 {
 			v += (-0.0728 - 2.7702*t - 1.1019*t2 - 0.0996*t3) / rad
 		} else if zn == 1 {
@@ -1023,8 +1023,8 @@ func wherePlanet(xt, zn int, jd float64) float64 {
 			v += (-0.0020 + 0.0044*t + 0.0213*t2 - 0.0250*t3) / 1000000
 		}
 	} else { //其它行星
-		XL0_xzb := []float64{ //行星星历修正表
-			//经(角秒),纬(角秒), 距(10-6AU)
+		XL0_xzb := []float64{ //行星星歷修正表
+			//經(角秒),緯(角秒), 距(10-6AU)
 			-0.08631, +0.00039, -0.00008, //水星
 			-0.07447, +0.00006, +0.00017, //金星
 			-0.07135, -0.00026, -0.00176, //火星

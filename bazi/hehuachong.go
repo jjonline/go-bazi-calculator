@@ -1,10 +1,10 @@
 package bazi
 
-// THeHuaChong 荷花冲
+// THeHuaChong 荷花沖
 type THeHuaChong struct {
 }
 
-// TTianGanWuHe 天干五合
+// TTianGanWuHe 天幹五合
 type TTianGanWuHe struct {
 }
 
@@ -30,15 +30,15 @@ func quickCheckTianGan(pGan1, pGan2 *TGan) (int, string) {
 	if nGan1 == nGan2 {
 		switch nGan1 {
 		case 0:
-			return 4, "甲己合化土" // 甲 阳木 + 己 阴土 = 合化土
+			return 4, "甲己合化土" // 甲 陽木 + 己 陰土 = 合化土
 		case 1:
-			return 0, "庚乙合化金" // 庚 阳金 + 乙 阴木 = 合化金
+			return 0, "庚乙合化金" // 庚 陽金 + 乙 陰木 = 合化金
 		case 2:
-			return 2, "丙辛合化水" // 丙 阳火 + 辛 阴金 = 合化水
+			return 2, "丙辛合化水" // 丙 陽火 + 辛 陰金 = 合化水
 		case 3:
-			return 1, "壬丁合化木" // 壬 阳水 + 丁 阴火 = 合化木
+			return 1, "壬丁合化木" // 壬 陽水 + 丁 陰火 = 合化木
 		case 4:
-			return 3, "戊癸合化火" // 戊 阳土 + 癸 阴水 = 合化火
+			return 3, "戊癸合化火" // 戊 陽土 + 癸 陰水 = 合化火
 		}
 	}
 

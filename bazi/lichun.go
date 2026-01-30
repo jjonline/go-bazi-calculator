@@ -2274,7 +2274,7 @@ var lichunlist = []*TSolarDate{
 	{2300, 2, 4, 15, 59, 19},
 }
 
-// GetLiChunYear 获取某个日期的立春年
+// GetLiChunYear 獲取某個日期的立春年
 func GetLiChunYear(pSolarDate *TSolarDate) int {
 	nYear := pSolarDate.Year()
 
@@ -2282,11 +2282,11 @@ func GetLiChunYear(pSolarDate *TSolarDate) int {
 		return nYear
 	}
 
-	// 时间是否大于当年立春
+	// 時間是否大於當年立春
 	if pSolarDate.Get64TimeStamp() > lichunlist[nYear-31].Get64TimeStamp() {
 		return nYear
 	}
 
-	// 没到立春
+	// 沒到立春
 	return nYear - 1
 }

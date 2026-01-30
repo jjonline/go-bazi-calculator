@@ -25,7 +25,7 @@ func main() {
 	flag.IntVar(&nSecond, "s", 0, "-s=0 ")
 	flag.IntVar(&nSex, "x", 0, "-x=0  1是男0是女 ")
 
-	flag.Parse() //解析输入的参数
+	flag.Parse() //解析輸入的參數
 
 	inputTime := time.Date(
 		nYear,

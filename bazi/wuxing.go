@@ -2,10 +2,10 @@ package bazi
 
 // 五行
 
-// GetWuXingFromNumber  从数字获得五行名, 0-4
+// GetWuXingFromNumber  從數字獲得五行名, 0-4
 func GetWuXingFromNumber(nValue int) string {
-	// {* 五行字符串，以通常的金木水火土为顺序 }
-	// 这里没用五行相生或者相克来排列
+	// {* 五行字符串，以通常的金木水火土爲順序 }
+	// 這里沒用五行相生或者相克來排列
 	switch nValue {
 	case 0:
 		return "金"
@@ -21,10 +21,10 @@ func GetWuXingFromNumber(nValue int) string {
 	return ""
 }
 
-// GetWuXingColorFromNumber 获取五行的颜色
+// GetWuXingColorFromNumber 獲取五行的顏色
 func GetWuXingColorFromNumber(nValue int) string {
-	// {* 五行字符串，以通常的金木水火土为顺序 }
-	// 这里没用五行相生或者相克来排列
+	// {* 五行字符串，以通常的金木水火土爲順序 }
+	// 這里沒用五行相生或者相克來排列
 	switch nValue {
 	case 0:
 		return "gold"
@@ -40,13 +40,13 @@ func GetWuXingColorFromNumber(nValue int) string {
 	return ""
 }
 
-// GetWuXingFromGan 获得某干的五行，0-4 对应 金木水火土
-// 甲乙为木，丙丁为火，戊己为土，庚辛为金，壬癸为水，
+// GetWuXingFromGan 獲得某幹的五行，0-4 對應 金木水火土
+// 甲乙爲木，丙丁爲火，戊己爲土，庚辛爲金，壬癸爲水，
 func GetWuXingFromGan(pGan *TGan) *TWuXing {
 	return pGan.ToWuXing()
 }
 
-// NewWuXing 创建五行
+// NewWuXing 創建五行
 func NewWuXing(nValue int) *TWuXing {
 	nValue %= 5
 	wuxing := TWuXing(nValue)
@@ -56,27 +56,27 @@ func NewWuXing(nValue int) *TWuXing {
 // TWuXing 五行
 type TWuXing int
 
-// ToString 转换成可阅读的字符串
+// ToString 轉換成可閱讀的字符串
 func (m *TWuXing) ToString() string {
 	return m.String()
 }
 
-// ToInt 转换成int
+// ToInt 轉換成int
 func (m *TWuXing) ToInt() int {
 	return m.Value()
 }
 
-// Value 转换成int
+// Value 轉換成int
 func (m *TWuXing) Value() int {
 	return (int)(*m)
 }
 
-// String 转换成可阅读的字符串
+// String 轉換成可閱讀的字符串
 func (m *TWuXing) String() string {
 	return GetWuXingFromNumber(m.Value())
 }
 
-// Color 五行颜色
+// Color 五行顏色
 func (m *TWuXing) Color() string {
 	return GetWuXingColorFromNumber(m.Value())
 }

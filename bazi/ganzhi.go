@@ -1,14 +1,14 @@
 package bazi
 
-// 干支
+// 幹支
 
-// GetGanZhiFromNumber 从数字获得天干地支名, 0-59
+// GetGanZhiFromNumber 從數字獲得天幹地支名, 0-59
 func GetGanZhiFromNumber(nValue int) string {
 	switch nValue {
 	case 0:
 		return "甲子"
 	case 1:
-		return "乙丑"
+		return "乙醜"
 	case 2:
 		return "丙寅"
 	case 3:
@@ -32,7 +32,7 @@ func GetGanZhiFromNumber(nValue int) string {
 	case 12:
 		return "丙子"
 	case 13:
-		return "丁丑"
+		return "丁醜"
 	case 14:
 		return "戊寅"
 	case 15:
@@ -56,7 +56,7 @@ func GetGanZhiFromNumber(nValue int) string {
 	case 24:
 		return "戊子"
 	case 25:
-		return "己丑"
+		return "己醜"
 	case 26:
 		return "庚寅"
 	case 27:
@@ -80,7 +80,7 @@ func GetGanZhiFromNumber(nValue int) string {
 	case 36:
 		return "庚子"
 	case 37:
-		return "辛丑"
+		return "辛醜"
 	case 38:
 		return "壬寅"
 	case 39:
@@ -104,7 +104,7 @@ func GetGanZhiFromNumber(nValue int) string {
 	case 48:
 		return "壬子"
 	case 49:
-		return "癸丑"
+		return "癸醜"
 	case 50:
 		return "甲寅"
 	case 51:
@@ -130,28 +130,28 @@ func GetGanZhiFromNumber(nValue int) string {
 	return ""
 }
 
-// NewGanZhi 创建干支
+// NewGanZhi 創建幹支
 func NewGanZhi(nValue int) *TGanZhi {
 	nValue %= 60
 	pGanZhi := TGanZhi(nValue)
 	return &pGanZhi
 }
 
-// NewGanZhiFromYear 获得八字年的干支，0-59 对应 甲子到癸亥
+// NewGanZhiFromYear 獲得八字年的幹支，0-59 對應 甲子到癸亥
 func NewGanZhiFromYear(nYear int) *TGanZhi {
 	if nYear > 0 {
 		return NewGanZhi(nYear - 4)
 	}
-	// 需要独立判断公元前的原因是没有公元 0 年
+	// 需要獨立判斷公元前的原因是沒有公元 0 年
 	return NewGanZhi(nYear - 3)
 }
 
-// NewGanZhiFromDay 获得八字天的干支, 0-59 对应 甲子到癸亥
+// NewGanZhiFromDay 獲得八字天的幹支, 0-59 對應 甲子到癸亥
 func NewGanZhiFromDay(nAllDays int) *TGanZhi {
 	return NewGanZhi(nAllDays + 12)
 }
 
-// CombineGanZhi 将天干地支组合成干支，0-9 0-11 转换成 0-59
+// CombineGanZhi 將天幹地支組合成幹支，0-9 0-11 轉換成 0-59
 func CombineGanZhi(pGan *TGan, pZhi *TZhi) *TGanZhi {
 	nGan := pGan.Value()
 	nZhi := pZhi.Value()
@@ -163,35 +163,35 @@ func CombineGanZhi(pGan *TGan, pZhi *TZhi) *TGanZhi {
 	return nil
 }
 
-// TGanZhi 干支
+// TGanZhi 幹支
 type TGanZhi int
 
-// ToString 转换成可阅读的字符串
+// ToString 轉換成可閱讀的字符串
 func (m *TGanZhi) ToString() string {
 	return m.String()
 }
 
-// ExtractGanZhi   将干支拆分成天干地支，0-59 转换成 0-9 0-11
+// ExtractGanZhi   將幹支拆分成天幹地支，0-59 轉換成 0-9 0-11
 func (m *TGanZhi) ExtractGanZhi() (*TGan, *TZhi) {
 	return NewGan(m.Value()), NewZhi(m.Value())
 }
 
-// ToNaYin 纳音
+// ToNaYin 納音
 func (m *TGanZhi) ToNaYin() *TNaYin {
 	return NewNaYin(m.Value() / 2)
 }
 
-// ToInt 转换成int
+// ToInt 轉換成int
 func (m *TGanZhi) ToInt() int {
 	return m.Value()
 }
 
-// Value 转换成int
+// Value 轉換成int
 func (m *TGanZhi) Value() int {
 	return (int)(*m)
 }
 
-// String 转换成可阅读的字符串
+// String 轉換成可閱讀的字符串
 func (m *TGanZhi) String() string {
 	return GetGanZhiFromNumber(m.Value())
 }

@@ -1,6 +1,6 @@
 package bazi
 
-// NewLunarDate 新建一个农历日期,  顺序月
+// NewLunarDate 新建一個農歷日期,  順序月
 func NewLunarDate(nYear int, nMonth int, nDay int, nHour int, nMinute int, nSecond int) *TLunarDate {
 	pDate := &TLunarDate{
 		nYear:              nYear,
@@ -12,14 +12,14 @@ func NewLunarDate(nYear int, nMonth int, nDay int, nHour int, nMinute int, nSeco
 		nSecond:            nSecond,
 	}
 
-	pDate.genNormal() // 第几个月转行成闰月
+	pDate.genNormal() // 第幾個月轉行成閏月
 
-	// 检查日期合法性
+	// 檢查日期合法性
 	if !pDate.GetDateIsValid() {
 		return nil
 	}
 
-	// 同样需要检查时间是否合法
+	// 同樣需要檢查時間是否合法
 	if !pDate.GetTimeIsValid(nHour, nMinute, nSecond) {
 		return nil
 	}
@@ -27,7 +27,7 @@ func NewLunarDate(nYear int, nMonth int, nDay int, nHour int, nMinute int, nSeco
 	return pDate
 }
 
-// NewLunarDateFromLeap 新建一个农历日期, 带闰月
+// NewLunarDateFromLeap 新建一個農歷日期, 帶閏月
 func NewLunarDateFromLeap(nYear int, nMonth int, nDay int, nHour int, nMinute int, nSecond int, isLeap bool) *TLunarDate {
 
 	pDate := &TLunarDate{
@@ -41,11 +41,11 @@ func NewLunarDateFromLeap(nYear int, nMonth int, nDay int, nHour int, nMinute in
 		isLeap:             isLeap,
 	}
 
-	pDate.genLeap(isLeap) // 闰月转变成第几月
+	pDate.genLeap(isLeap) // 閏月轉變成第幾月
 
-	// 农历 描述的月  换成第几个月的月
+	// 農歷 描述的月  換成第幾個月的月
 
-	// 检查日期合法性
+	// 檢查日期合法性
 	if !pDate.GetDateIsValid() {
 		return nil
 	}
@@ -53,20 +53,20 @@ func NewLunarDateFromLeap(nYear int, nMonth int, nDay int, nHour int, nMinute in
 	return pDate
 }
 
-// NewLunarDateFrom64TimeStamp 从64位时间戳反推日期
+// NewLunarDateFrom64TimeStamp 從64位時間戳反推日期
 func NewLunarDateFrom64TimeStamp(nTimeStamp int64) *TLunarDate {
 	pDate := &TLunarDate{}
 
-	// 计算出年份
+	// 計算出年份
 	pDate.GetYearFrom64TimeStamp(nTimeStamp)
-	// 计算月份
+	// 計算月份
 	pDate.GetMonthFrom64TimeStamp(nTimeStamp)
-	// 计算其他参数
+	// 計算其他參數
 	pDate.GetDayTimeFrom64TimeStamp(nTimeStamp)
 
-	// fmt.Println("这里  时间戳反推")
-	pDate.genNormal() // 第几个月转行成闰月
-	// 检查日期合法性
+	// fmt.Println("這里  時間戳反推")
+	pDate.genNormal() // 第幾個月轉行成閏月
+	// 檢查日期合法性
 	if !pDate.GetDateIsValid() {
 		return nil
 	}
@@ -110,7 +110,7 @@ func GetChnChar(nNumber int) string {
 	return ""
 }
 
-// GetChnCharFromYear 年份转成汉字形式
+// GetChnCharFromYear 年份轉成漢字形式
 func GetChnCharFromYear(nYear int) string {
 	if nYear < 0 {
 		return ""
@@ -130,43 +130,43 @@ func GetChnCharFromYear(nYear int) string {
 	return strYear
 }
 
-// TLunarDate 农历日期
+// TLunarDate 農歷日期
 type TLunarDate struct {
 	nYear              int
-	nMonth             int  // 月份,  顺序月, 不是传统月, 比如闰4月 这里是(第)5月  而有闰4月的5月这里是(第)6月
-	nLeapMonth         int  // 闰月 0表示不闰
+	nMonth             int  // 月份,  順序月, 不是傳統月, 比如閏4月 這里是(第)5月  而有閏4月的5月這里是(第)6月
+	nLeapMonth         int  // 閏月 0表示不閏
 	nDay               int  // 日
-	nHour              int  // 时
+	nHour              int  // 時
 	nMinute            int  // 分
 	nSecond            int  // 秒
-	isLeap             bool // 是否是闰月
-	nConventionalMonth int  // 传统的月份. 也就是我们平时所说的月份(没有闰月的时候等于 nMonth)
+	isLeap             bool // 是否是閏月
+	nConventionalMonth int  // 傳統的月份. 也就是我們平時所說的月份(沒有閏月的時候等於 nMonth)
 }
 
 // GetDateIsValid 返回日期是否合法
 func (m *TLunarDate) GetDateIsValid() bool {
 	if m.nYear < 1800 || m.nYear > 2299 {
-		return false // 1800 之前的年份已经严重不精确  2299 也一样
+		return false // 1800 之前的年份已經嚴重不精確  2299 也一樣
 	}
 
-	// 1月开始, 13月结束
+	// 1月開始, 13月結束
 	if m.nMonth < 1 || m.nMonth > 13 {
 		return false
 	}
 
-	// 1号开始
+	// 1號開始
 	if m.nDay < 1 {
 		return false
 	}
 
 	if m.nLeapMonth == 0 {
-		// 没有闰月的话 nMonth 只能是 1 ~ 12
+		// 沒有閏月的話 nMonth 只能是 1 ~ 12
 		if m.nMonth == 13 {
 			return false
 		}
 	}
 
-	// 获取每个月有多少天, 超过天数的话 日期非法
+	// 獲取每個月有多少天, 超過天數的話 日期非法
 	if m.nDay > m.GetMonthDays() {
 		return false
 	}
@@ -174,7 +174,7 @@ func (m *TLunarDate) GetDateIsValid() bool {
 	return true
 }
 
-// GetTimeIsValid 检查时间是否合法
+// GetTimeIsValid 檢查時間是否合法
 func (m *TLunarDate) GetTimeIsValid(nHour, nMinute, nSecond int) bool {
 	if nHour < 0 || nHour > 23 {
 		return false
@@ -190,64 +190,64 @@ func (m *TLunarDate) GetTimeIsValid(nHour, nMinute, nSecond int) bool {
 	return true
 }
 
-// genNormal 第几个月改成闰月
+// genNormal 第幾個月改成閏月
 func (m *TLunarDate) genNormal() {
-	m.GetLeapMonth() // 获取闰月信息
+	m.GetLeapMonth() // 獲取閏月信息
 
-	// 没有闰月, 不用改
+	// 沒有閏月, 不用改
 	if m.nLeapMonth == 0 {
 		m.nConventionalMonth = m.nMonth
 		return
 	}
 
-	// 有闰月
-	// 闰月之前不变
+	// 有閏月
+	// 閏月之前不變
 	if m.nMonth < m.nLeapMonth {
 		m.nConventionalMonth = m.nMonth
 		return
 	}
 
 	if m.nMonth == m.nLeapMonth+1 {
-		m.isLeap = true // 刚好是闰月,
+		m.isLeap = true // 剛好是閏月,
 	}
 
-	// 闰月之后的月份需要+1
+	// 閏月之後的月份需要+1
 	m.nConventionalMonth = m.nMonth - 1
 }
 
-// genLeap 闰月改变成第几月
+// genLeap 閏月改變成第幾月
 func (m *TLunarDate) genLeap(isLeap bool) {
-	m.GetLeapMonth() // 获取闰月信息
+	m.GetLeapMonth() // 獲取閏月信息
 
-	// 没有闰月, 不用改
+	// 沒有閏月, 不用改
 	if m.nLeapMonth == 0 {
 		return
 	}
 
-	// 有闰月
-	// 闰月之前不变
+	// 有閏月
+	// 閏月之前不變
 	if m.nMonth < m.nLeapMonth {
 		return
 	}
 
-	// 闰月时
+	// 閏月時
 	if m.nMonth == m.nLeapMonth {
 		if isLeap {
-			// 闰月是下一个月
+			// 閏月是下一個月
 			m.nMonth++
 			return
 		}
 		return
 	}
 
-	// 超过闰月月
+	// 超過閏月月
 	m.nMonth++
 
 }
 
-// { * 自公元前 850 年开始的农历闰月信息 -849~2100，移植自中国日历类}
+// { * 自公元前 850 年開始的農歷閏月信息 -849~2100，移植自中國日歷類}
 // var SCnLeapMonth string = "0c0080050010a0070030c0080050010a0070030c0080050020a0070030c0080050020a" + "0070030c0090050020a0070030c0090050020a0060030c0060030c00900600c0c0060c" + "00c00c00c0c000600c0c0006090303030006000c00c060c0006c00000c0c0c00600030" + "30006c00009009c0090c00c009000300030906030030c0c00060c00090c0060600c003" + "0060c00c003006009060030c0060060c0090900c00090c0090c00c0060300060600030" + "30c0c00030c0060030c0090060030c0090300c0080050020a0060030c0080050020b00" + "70030c0090050010a0070030b0090060020a0070040c0080050020a0060030c0080050" + "020b0070030c0090050010a0070030b0090060020a0070040c0080050020a0060030c0" + "080050020b0070030c0090050000c00900909009009090090090090900900909009009" + "0090900900909009009009090090090900900900909009009090090090900900900909" + "00900909009009009090090090900900900909009009090060030c0090050010a00700" + "30b008005001090070040c0080050020a0060030c0090040010a0060030c0090050010" + "a0070030b0080050010a008005001090050020a0060030c0080040010a0060030c0090" + "050010a0070030b0080050010a0070030b008005001090070040c0080050020a006003" + "0c0080040010a0060030c0090050010a0070030b008005001090070040c0080050020a" + "0060030c0080040010a0060030c0090050010a0060030c0090050010a0070030b00800" + "5001090070040c0080050020a0060030c0080040010a0070030b0080050010a0070040" + "c0080050020a0060030c0080040010a0070030c0090050010a0070030b0080050020a0" + "060030c0080040010a0060030c0090050050020a0060030c0090050010b0070030c009" + "0050010a0070040c0080040020a0060030c0080050020a0060030c0090050010a00700" + "30b0080040020a0060040c0090050020b0070030c00a0050010a0070030b0090050020" + "a0070030c0080040020a0060030c0090050010a0070030c0090050030b007005001090" + "050020a007004001090060020c0070050c0090060030b0080040020a0060030b008004" + "0010a0060030b0080050010a0050040c0080050010a0060030c0080050010b0070030c" + "007005001090070030b0070040020a0060030c0080040020a0070030b0090050010a00" + "60040c0080050020a0060040c0080050010b0070030c007005001090070030c0080050" + "020a0070030c0090050020a0070030c0090050020a0060040c0090050020a0060040c0" + "090050010b0070030c0080050030b007004001090060020c008004002090060020a008" + "004001090050030b0080040020a0060040b0080040c00a0060020b0070050010900600" + "30b0070050020a0060020c008004002090070030c008005002090070040c0080040020" + "a0060040b0090050010a0060030b0080050020a0060040c0080050010b007003001080" + "05001090070030c0080050020a007003001090050030a0070030b0090050020a006004" + "0c0090050030b0070040c0090050010c0070040c0080060020b00700400a090060020b" + "007003002090060020a005004001090050030b007004001090050040c0080040c00a00" + "60020c007005001090060030b0070050020a0060020c008004002090060030b0080040" + "02090060030b0080040020a0060040b0080040010b0060030b0070050010a006004002" + "0700500308006004003070050030700600400307005003080060040030700500409006" + "0040030700500409006005002070050030a00600500307005004002060040020600500" + "30020600400307005004090060040030700500408007005003080050040a0060050030" + "7005004002060050030800500400206005002070050040020600500307006004002070" + "050030800600400307005004080060040a006005003080050040020700500409006004" + "002060050030b006005002070050030800600400307005004080060040030700500408" + "0060040020"
-// 从公元1800年 到 公元2300年
+// 從公元1800年 到 公元2300年
 var leapMonthList = [500]int{
 	38570, 3434, 1396, 21174, 4718, 51758, 6700, 7318, 44370, 6994, // 1800 - 1809
 	2922, 25965, 1372, 5212, 23085, 6442, 55957, 5796, 5842, 35546, // 1810 - 1819
@@ -302,19 +302,19 @@ var leapMonthList = [500]int{
 
 }
 
-// GetLeapMonth 获取闰月
+// GetLeapMonth 獲取閏月
 func (m *TLunarDate) GetLeapMonth() int {
 	if m.nYear < 1800 || m.nYear > 2299 {
 		m.nLeapMonth = 0
 		return 0
 	}
 	nLeapMonth := leapMonthList[m.nYear-1800]
-	nLeapMonth >>= 13 // 移除掉12个农历大小月
+	nLeapMonth >>= 13 // 移除掉12個農歷大小月
 	m.nLeapMonth = nLeapMonth & 0x0F
 	return m.nLeapMonth
 }
 
-// GetMonthDays 获取某农历年的第N个月是大月30天还是小月29天
+// GetMonthDays 獲取某農歷年的第N個月是大月30天還是小月29天
 func (m *TLunarDate) GetMonthDays() int {
 	if m.nYear < 1800 || m.nYear >= 2300 {
 		return 0
@@ -324,7 +324,7 @@ func (m *TLunarDate) GetMonthDays() int {
 		return 0
 	}
 
-	// 如果有闰月, 并且闰月
+	// 如果有閏月, 並且閏月
 	if m.nLeapMonth == 0 && m.nMonth == 13 {
 		return 0
 	}
@@ -334,16 +334,16 @@ func (m *TLunarDate) GetMonthDays() int {
 	// 取第一位
 	nBig = nBig & 1
 
-	// 如果有值(nBig == 1)那么是大月
+	// 如果有值(nBig == 1)那麼是大月
 	if nBig > 0 {
 		return 30
 	}
 	return 29
 }
 
-// GetYearFrom64TimeStamp 从64位时间戳反推年
+// GetYearFrom64TimeStamp 從64位時間戳反推年
 func (m *TLunarDate) GetYearFrom64TimeStamp(nTimeStamp int64) *TLunarDate {
-	// 准备进行二分法
+	// 準備進行二分法
 	nLow := 1900
 	nHigh := 2100
 
@@ -368,10 +368,10 @@ func (m *TLunarDate) GetYearFrom64TimeStamp(nTimeStamp int64) *TLunarDate {
 
 // GetMonthFrom64TimeStamp .
 func (m *TLunarDate) GetMonthFrom64TimeStamp(nTimeStamp int64) {
-	// 计算完毕年份以后, 需要在这里先判断 // fix chadwi https://github.com/warrially/BaziGo/issues/3
+	// 計算完畢年份以後, 需要在這里先判斷 // fix chadwi https://github.com/warrially/BaziGo/issues/3
 	m.GetLeapMonth()
-	// 这里开始特殊处理
-	// 全年一共几个月
+	// 這里開始特殊處理
+	// 全年一共幾個月
 	nTotalMonth := 12
 	if m.nLeapMonth > 0 {
 		nTotalMonth++
@@ -388,7 +388,7 @@ func (m *TLunarDate) GetMonthFrom64TimeStamp(nTimeStamp int64) {
 	m.nConventionalMonth = nTotalMonth
 }
 
-// GetDayTimeFrom64TimeStamp 从64位时间戳反推其他参数
+// GetDayTimeFrom64TimeStamp 從64位時間戳反推其他參數
 func (m *TLunarDate) GetDayTimeFrom64TimeStamp(nTimeStamp int64) {
 	nTimeStamp -= NewLunarDate(m.nYear, m.nMonth, 1, 0, 0, 0).Get64TimeStamp()
 
@@ -397,7 +397,7 @@ func (m *TLunarDate) GetDayTimeFrom64TimeStamp(nTimeStamp int64) {
 	// 扣掉日
 	nTimeStamp -= int64(m.nDay) * 24 * 60 * 60
 
-	m.nDay++ // 因为每个月的天数是从1开始的, 所以这里需要补1天
+	m.nDay++ // 因爲每個月的天數是從1開始的, 所以這里需要補1天
 	m.nHour = int(nTimeStamp / (60 * 60))
 	nTimeStamp -= int64(m.nHour) * 60 * 60
 	m.nMinute = int(nTimeStamp / 60)
@@ -405,12 +405,12 @@ func (m *TLunarDate) GetDayTimeFrom64TimeStamp(nTimeStamp int64) {
 	m.nSecond = int(nTimeStamp)
 }
 
-// Get64TimeStamp 获取64位时间戳
+// Get64TimeStamp 獲取64位時間戳
 func (m *TLunarDate) Get64TimeStamp() int64 {
 	nAllDays := m.GetAllDays()
 	nResult := int64(nAllDays)
-	nResult *= 24 * 60 * 60 // 天数换成秒
-	//再计算出秒数
+	nResult *= 24 * 60 * 60 // 天數換成秒
+	//再計算出秒數
 	nResult += int64(m.nHour) * 60 * 60
 	nResult += int64(m.nMinute) * 60
 	nResult += int64(m.nSecond)
@@ -920,9 +920,9 @@ var allDayList = [500][13]int{
 	{839359, 839389, 839418, 839448, 839477, 839506, 839536, 839565, 839595, 839625, 839654, 839684, 839714}, //  2299
 }
 
-// GetAllDays 获取距离公元原点的日数, 这里是农历来的年月日
+// GetAllDays 獲取距離公元原點的日數, 這里是農歷來的年月日
 func (m *TLunarDate) GetAllDays() int {
-	// 目前只能计算1800年到2300年的天数, 精度不够高
+	// 目前只能計算1800年到2300年的天數, 精度不夠高
 	if m.nYear < 1800 || m.nYear >= 2300 {
 		return 0
 	}
@@ -944,7 +944,7 @@ func (m *TLunarDate) Year() string {
 func (m *TLunarDate) Month() string {
 	strResult := ""
 	if m.nConventionalMonth == m.nMonth-1 {
-		strResult += "闰"
+		strResult += "閏"
 	}
 
 	switch m.nConventionalMonth {
@@ -971,7 +971,7 @@ func (m *TLunarDate) Month() string {
 	case 11:
 		strResult += "冬月"
 	case 12:
-		strResult += "腊月"
+		strResult += "臘月"
 	}
 
 	return strResult
@@ -1047,39 +1047,39 @@ func (m *TLunarDate) Day() string {
 	return ""
 }
 
-// Hour 时
+// Hour 時
 func (m *TLunarDate) Hour() string {
 	switch m.nHour {
 	case 23, 0:
-		return "子时" // 子时——晚11点钟到凌晨1点钟；
+		return "子時" // 子時——晚11點鍾到凌晨1點鍾；
 	case 1, 2:
-		return "丑时" // 丑时——1点钟至3点钟；
+		return "醜時" // 醜時——1點鍾至3點鍾；
 	case 3, 4:
-		return "寅时" // 寅时——3点钟至5点钟；
+		return "寅時" // 寅時——3點鍾至5點鍾；
 	case 5, 6:
-		return "卯时" // 卯时——5点钟至7点钟；
+		return "卯時" // 卯時——5點鍾至7點鍾；
 	case 7, 8:
-		return "辰时" // 辰时——7点钟至9点钟；
+		return "辰時" // 辰時——7點鍾至9點鍾；
 	case 9, 10:
-		return "巳时" // 巳时——9点钟至11点钟；
+		return "巳時" // 巳時——9點鍾至11點鍾；
 	case 11, 12:
-		return "午时" // 午时——11点钟至下午1点钟；
+		return "午時" // 午時——11點鍾至下午1點鍾；
 	case 13, 14:
-		return "未时" // 未时——13点钟至15点钟；
+		return "未時" // 未時——13點鍾至15點鍾；
 	case 15, 16:
-		return "申时" // 申时——下午3点钟至5点钟；
+		return "申時" // 申時——下午3點鍾至5點鍾；
 	case 17, 18:
-		return "酉时" // 酉时——下午5点钟至7点钟；
+		return "酉時" // 酉時——下午5點鍾至7點鍾；
 	case 19, 20:
-		return "戌时" // 戌时——下午7点钟至晚9点钟；
+		return "戌時" // 戌時——下午7點鍾至晚9點鍾；
 	case 21, 22:
-		return "亥时" // 亥时——晚9点钟至11点钟。
+		return "亥時" // 亥時——晚9點鍾至11點鍾。
 	}
 	return ""
 }
 
 func (m *TLunarDate) String() string {
-	strResult := `农历:`
+	strResult := `農歷:`
 	strResult += m.Year() + "年"
 	strResult += m.Month()
 	strResult += m.Day()
@@ -1088,7 +1088,7 @@ func (m *TLunarDate) String() string {
 	return strResult
 }
 
-// ToLunarDate 转成农历年
+// ToLunarDate 轉成農歷年
 func (m *TLunarDate) ToSolarDate() *TSolarDate {
 	return NewSolarDateFrom64TimeStamp(m.Get64TimeStamp())
 }

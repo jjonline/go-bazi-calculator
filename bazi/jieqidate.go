@@ -2,15 +2,15 @@ package bazi
 
 import "fmt"
 
-// TJieQiDate 节气
+// TJieQiDate 節氣
 type TJieQiDate struct {
 	Year   int    // 年
 	Month  int    // 月
 	Day    int    // 日
-	Hour   int    // 时
+	Hour   int    // 時
 	Minute int    // 分
 	Second int    // 秒
-	JieQi  TJieQi // 节气
+	JieQi  TJieQi // 節氣
 }
 
 var jieqilist = []*TJieQiDate{
@@ -54496,36 +54496,36 @@ var jieqilist = []*TJieQiDate{
 	{2300, 12, 22, 16, 54, 36, 21},
 }
 
-// ToSolarDate 节气日期 转成 普通日期用
+// ToSolarDate 節氣日期 轉成 普通日期用
 func (m *TJieQiDate) ToSolarDate() *TSolarDate {
 	return NewSolarDate(m.Year, m.Month, m.Day, m.Hour, m.Minute, m.Second)
 }
 
-// GetJieQiDate 获取某个日期的节气, 和前后两个节气的日期
+// GetJieQiDate 獲取某個日期的節氣, 和前後兩個節氣的日期
 func GetJieQiDate(pSolarDate *TSolarDate) (*TJieQiDate, *TJieQiDate) {
 	nYear := pSolarDate.Year()
 	if (nYear <= 31) || (nYear >= 2300) {
-		return nil, nil // 超过了
+		return nil, nil // 超過了
 	}
 
-	// 年份的索引应该是从这里开始
-	nIndex := (nYear - 31) * 24 // 一年24个节气
+	// 年份的索引應該是從這里開始
+	nIndex := (nYear - 31) * 24 // 一年24個節氣
 
-	nTimeStamp := pSolarDate.Get64TimeStamp() // 拿到当前日期的
+	nTimeStamp := pSolarDate.Get64TimeStamp() // 拿到當前日期的
 
-	// 根据前后索引获取一年的
+	// 根據前後索引獲取一年的
 	for i := nIndex - 1; i <= nIndex+25; i++ {
 		if jieqilist[i].JieQi.IsJie() && nTimeStamp < jieqilist[i].ToSolarDate().Get64TimeStamp() {
 			return jieqilist[i-2], jieqilist[i]
 		}
 	}
 
-	// 超标
+	// 超標
 	return nil, nil
 }
 
 // String
 func (m *TJieQiDate) String() string {
-	return fmt.Sprintf("节气:%d年%02d月%02d日 %02d:%02d:%02d (%v)",
+	return fmt.Sprintf("節氣:%d年%02d月%02d日 %02d:%02d:%02d (%v)",
 		m.Year, m.Month, m.Day, m.Hour, m.Minute, m.Second, m.JieQi.String())
 }

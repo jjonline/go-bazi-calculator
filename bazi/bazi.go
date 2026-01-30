@@ -12,7 +12,7 @@ func NewBazi(pSolarDate *TSolarDate, nSex int) *TBazi {
 	return pBazi.init()
 }
 
-// NewBaziFromLunarDate 新建八字 从农历
+// NewBaziFromLunarDate 新建八字 從農歷
 func NewBaziFromLunarDate(pLunarDate *TLunarDate, nSex int) *TBazi {
 	pBazi := &TBazi{
 		pLunarDate: pLunarDate,
@@ -22,9 +22,9 @@ func NewBaziFromLunarDate(pLunarDate *TLunarDate, nSex int) *TBazi {
 	return pBazi.init()
 }
 
-// GetBazi 旧版八字接口, 八字入口
+// GetBazi 舊版八字接口, 八字入口
 func GetBazi(nYear, nMonth, nDay, nHour, nMinute, nSecond, nSex int) *TBazi {
-	// 先解决时间问题. 然后开始处理八字问题
+	// 先解決時間問題. 然後開始處理八字問題
 	pSolarDate := NewSolarDate(nYear, nMonth, nDay, nHour, nMinute, nSecond)
 	if pSolarDate == nil {
 		return nil
@@ -33,44 +33,44 @@ func GetBazi(nYear, nMonth, nDay, nHour, nMinute, nSecond, nSex int) *TBazi {
 	return NewBazi(pSolarDate, nSex)
 }
 
-// TBazi 八字大类
+// TBazi 八字大類
 type TBazi struct {
-	pSolarDate *TSolarDate // 新历的日期
-	pLunarDate *TLunarDate // 农历日期
-	pBaziDate  *TBaziDate  // 八字历
+	pSolarDate *TSolarDate // 新歷的日期
+	pLunarDate *TLunarDate // 農歷日期
+	pBaziDate  *TBaziDate  // 八字歷
 	pSiZhu     *TSiZhu     // 四柱嗯
-	nSex       int         // 性别1男其他女
-	pDaYun     *TDaYun     // 大运
-	pQiYunDate *TSolarDate // 起运时间XX年XX月开始起运
+	nSex       int         // 性別1男其他女
+	pDaYun     *TDaYun     // 大運
+	pQiYunDate *TSolarDate // 起運時間XX年XX月開始起運
 }
 
 // 八字初始化
 func (m *TBazi) init() *TBazi {
-	// 1. 新农互转
+	// 1. 新農互轉
 	if m.pSolarDate == nil {
 		if m.pLunarDate == nil {
 			return nil
 		}
-		// 农转新
+		// 農轉新
 		m.pSolarDate = m.pLunarDate.ToSolarDate()
 	} else {
-		// 新转农
+		// 新轉農
 		m.pLunarDate = m.pSolarDate.ToLunarDate()
 	}
 
-	// 1. 拿到新历的情况下, 需要计算八字历
+	// 1. 拿到新歷的情況下, 需要計算八字歷
 	m.pBaziDate = m.pSolarDate.ToBaziDate()
 
-	// 2. 根据八字历, 准备计算四柱了
+	// 2. 根據八字歷, 準備計算四柱了
 	m.pSiZhu = NewSiZhu(m.pSolarDate, m.pBaziDate)
 
-	// 3. 计算大运
+	// 3. 計算大運
 	m.pDaYun = NewDaYun(m.pSiZhu, m.nSex)
 
-	// 4. 计算起运时间
+	// 4. 計算起運時間
 	m.pQiYunDate = NewQiYun(m.pDaYun.ShunNi(), m.pBaziDate.PreviousJie().ToSolarDate(), m.pBaziDate.NextJie().ToSolarDate(), m.pSolarDate)
 
-	// 5. 起运时间融入到大运中
+	// 5. 起運時間融入到大運中
 	nAge := m.QiYunDate().Year() - m.Date().Year()
 	for i := 0; i < 12; i++ {
 		m.pDaYun.nAge[i] = nAge + 10*i
@@ -81,7 +81,7 @@ func (m *TBazi) init() *TBazi {
 
 // String 打印用
 func (m *TBazi) String() string {
-	return fmt.Sprintf("%v\n %v\n %v\n%v\n%v \n起运时间%v", m.pSolarDate, m.pLunarDate, m.pBaziDate, m.pSiZhu, m.pDaYun, m.pQiYunDate)
+	return fmt.Sprintf("%v\n %v\n %v\n%v\n%v \n起運時間%v", m.pSolarDate, m.pLunarDate, m.pBaziDate, m.pSiZhu, m.pDaYun, m.pQiYunDate)
 }
 
 // SiZhu 四柱
@@ -89,27 +89,27 @@ func (m *TBazi) SiZhu() *TSiZhu {
 	return m.pSiZhu
 }
 
-// Date 获取日期， 默认就是新历
+// Date 獲取日期， 默認就是新歷
 func (m *TBazi) Date() *TSolarDate {
 	return m.pSolarDate
 }
 
-// SolarData 获取新历日期
+// SolarData 獲取新歷日期
 func (m *TBazi) SolarData() *TSolarDate {
 	return m.Date()
 }
 
-// LunarDate 获取农历日期
+// LunarDate 獲取農歷日期
 func (m *TBazi) LunarDate() *TLunarDate {
 	return m.pLunarDate
 }
 
-// DaYun 获取大运
+// DaYun 獲取大運
 func (m *TBazi) DaYun() *TDaYun {
 	return m.pDaYun
 }
 
-// QiYunDate 起运时间
+// QiYunDate 起運時間
 func (m *TBazi) QiYunDate() *TSolarDate {
 	return m.pQiYunDate
 }

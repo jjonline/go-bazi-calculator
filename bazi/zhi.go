@@ -2,13 +2,13 @@ package bazi
 
 // 地支
 
-// GetDiZhiFromNumber 从数字获得地支名, 0-9
+// GetDiZhiFromNumber 從數字獲得地支名, 0-9
 func GetDiZhiFromNumber(nValue int) string {
 	switch nValue {
 	case 0:
 		return "子"
 	case 1:
-		return "丑"
+		return "醜"
 	case 2:
 		return "寅"
 	case 3:
@@ -34,7 +34,7 @@ func GetDiZhiFromNumber(nValue int) string {
 	return ""
 }
 
-// NewZhi 创建地支
+// NewZhi 創建地支
 func NewZhi(nValue int) *TZhi {
 	nValue %= 12
 	Zhi := TZhi(nValue)
@@ -44,17 +44,17 @@ func NewZhi(nValue int) *TZhi {
 // TZhi 地支
 type TZhi int
 
-// ToString 转换成可阅读的字符串
+// ToString 轉換成可閱讀的字符串
 func (m *TZhi) ToString() string {
 	return m.String()
 }
 
-// ToInt 转换成int
+// ToInt 轉換成int
 func (m *TZhi) ToInt() int {
 	return m.Value()
 }
 
-// ToWuXing 地支转化成五行
+// ToWuXing 地支轉化成五行
 func (m *TZhi) ToWuXing() *TWuXing {
 	switch m.Value() {
 	case 8, 9:
@@ -71,12 +71,12 @@ func (m *TZhi) ToWuXing() *TWuXing {
 	return nil
 }
 
-// Value 转换成int
+// Value 轉換成int
 func (m *TZhi) Value() int {
 	return (int)(*m)
 }
 
-// String 转换成可阅读的字符串
+// String 轉換成可閱讀的字符串
 func (m *TZhi) String() string {
 	return GetDiZhiFromNumber(m.Value())
 }
